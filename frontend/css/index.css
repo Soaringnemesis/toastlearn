@@ -1,0 +1,55 @@
+* {
+    font-family: "Source Sans Pro";
+    color: white;
+}
+p {
+    font-weight: normal;
+}
+h1,h2,h3,h4,h5,h6,.bold {
+    font-weight: bold;
+}
+
+body {
+    margin: 0;
+    background: #06051B;
+}
+
+
+.header {
+    width: 100vw;
+    height: 100px;
+    display: block;
+}
+.headerInner {
+    width: 100%;
+    max-width: 88%;
+    margin: auto;
+}
+.headerLogo, .headerLinks {
+    padding: 20px;
+    display: inline-block;
+    height: 60px;
+}
+.headerLogo {
+    float: left;
+}
+.headerLinks {
+    float: right;
+}
+.headerLogo img {
+    max-height: 60px;
+}
+.headerLinks .links {
+    list-style-type: none;
+}
+.headerLinks .links li{
+    display: block;
+    float: right;
+}
+.headerLinks .links a{
+    text-decoration: none;
+}
+.headerLink {
+    padding: 0px 20px;
+    font-size: calc(0.25vw + 18px);
+}

@@ -1,0 +1,13 @@
+<svg id="Component_3_1" data-name="Component 3 – 1" xmlns="http://www.w3.org/2000/svg" width="993.638" height="216" viewBox="0 0 993.638 216">
+  <g id="Group_9" data-name="Group 9" transform="translate(-177.362 -152)">
+    <text id="toastlearn" transform="translate(418 321)" fill="#fff" font-size="172" font-family="SourceSansPro-Bold, Source Sans Pro" font-weight="700"><tspan x="0" y="0">toast</tspan><tspan y="0" font-family="SourceSansPro-Regular, Source Sans Pro" font-weight="400">learn</tspan></text>
+  </g>
+  <g id="Group_17" data-name="Group 17" transform="translate(-21.362 -259)">
+    <path id="Subtraction_1" data-name="Subtraction 1" d="M595.574,799.462h-86a20,20,0,0,1-20-20v-2.443l62.391,11a20.213,20.213,0,0,0,3.5.307,19.96,19.96,0,0,0,19.672-16.53l13.3-75.446a27.469,27.469,0,0,0,16.488-35.888h.65a24,24,0,0,1,10,45.823v73.176a20,20,0,0,1-20,20Z" transform="translate(-406.574 -344.462)" fill="#fff"/>
+    <path id="Union_1" data-name="Union 1" d="M454,758a20,20,0,0,1-20-20V664.824A24,24,0,0,1,444,619H550a24,24,0,0,1,10,45.824V738a20,20,0,0,1-20,20Z" transform="matrix(0.985, 0.174, -0.174, 0.985, -260.632, -403.82)" fill="#fff"/>
+  </g>
+  <g id="Group_18" data-name="Group 18" transform="translate(-21.362 -259)">
+    <path id="Subtraction_1-2" data-name="Subtraction 1" d="M595.574,799.462h-86a20,20,0,0,1-20-20v-2.443l62.391,11a20.213,20.213,0,0,0,3.5.307,19.96,19.96,0,0,0,19.672-16.53l13.3-75.446a27.469,27.469,0,0,0,16.488-35.888h.65a24,24,0,0,1,10,45.823v73.176a20,20,0,0,1-20,20Z" transform="translate(-406.574 -344.462)" fill="#fff"/>
+    <path id="Union_1-2" data-name="Union 1" d="M454,758a20,20,0,0,1-20-20V664.824A24,24,0,0,1,444,619H550a24,24,0,0,1,10,45.824V738a20,20,0,0,1-20,20Z" transform="matrix(0.985, 0.174, -0.174, 0.985, -260.632, -403.82)" fill="#fff"/>
+  </g>
+</svg>
