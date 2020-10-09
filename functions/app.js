@@ -3,8 +3,8 @@ const express = require("express");
 const PORT = 80;
 
 const app = express();
-app.get("/", (request, response) => {
-
+app.get("/", (req, res) => {
+    res.send("hello world");
 });
 
 exports.app = functions.https.onRequest(app);
