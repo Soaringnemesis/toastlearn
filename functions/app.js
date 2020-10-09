@@ -26,7 +26,7 @@ let staticOptions = {
 app.use(express.static("public", staticOptions));
 
 //Home page
-app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
     res.render("index", {});
 });
 //Login page
@@ -36,10 +36,10 @@ app.get("/", (req, res) => {
 //Register page
 app.get("/", (req, res) => {
     res.render("index", {});
-});
+});*/
+
+app.get("*", (request, response) => {
+    response.send("OK")
+})
 
 exports.app = functions.https.onRequest(app);
-
-app.listen(PORT, () => {
-    console.log("Server is running on PORT", PORT);
-});
