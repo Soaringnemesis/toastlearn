@@ -64,6 +64,9 @@ body {
     padding: 0px 20px;
 
 }
+.headerLinks .links li a p {
+    font-weight: bold;
+}
 .contentContainer {
     width: 100%;
     max-width: 88%;
@@ -94,7 +97,7 @@ h3 {
 }
 .toastContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 .toast {
     position: relative;
@@ -132,13 +135,25 @@ h3 {
 .toast:nth-of-type(4n-1) .toastHeader{
     background: #149A77;
 }
-.userPreview .user {
+.user {
     width: 50px;
     height: 50px;
     border-radius: 100%;
 }
 a {
     text-decoration: none;
+}
+.container {
+    background: #1F1E32;
+    display: block;
+    margin: 2em 0;
+    padding: 3em 1em 10em 1em;
+    border-radius: 1em 1em 0px 0px;
+    position: relative;
+}
+.container.small {
+    width: 100%;
+    max-width: 600px;
 }
 .innerToast:hover {
     transform: translate(-0.25em, -0.25em);
@@ -164,4 +179,19 @@ a {
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+  .headerLinks .links li.profile {
+      background:#1F1E32;
+      margin: 15px 0px;
+      height: 70px;
+  }
+  .profile a {
+      display: flex;
+      align-items: center;
+  }
+  .profile a .user {
+      margin-right: 0.75em;
+  }
+  .profile a > * {
+      display: inline-block;
   }
