@@ -97,7 +97,7 @@ h3 {
 }
 .toastContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 .toast {
     position: relative;
