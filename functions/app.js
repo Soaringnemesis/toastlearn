@@ -30,11 +30,11 @@ app.get("/", (req, res) => {
     res.render("index", {});
 });
 //Login page
-app.get("/", (req, res) => {
+app.get("/login", (req, res) => {
     res.render("index", {});
 });
 //Register page
-app.get("/", (req, res) => {
+app.get("/register", (req, res) => {
     res.render("index", {});
 });
 
