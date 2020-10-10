@@ -25,6 +25,9 @@ let staticOptions = {
     redirect: false
 }
 
+
+
+
 //I don't care if this gets leaked. Who will use it anyways?
 /*const ALGOLIA_APP_ID = "OBHENVV9DR";
 const ALGOLIA_ADMIN_KEY = "3a7b89776da3b87012ef76126a9783a6";
@@ -41,20 +44,28 @@ exports.addFirestoreDataToAlgolia = functions.https.onRequest((req,res) => {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(csrf({ cookie: true }));
+var csurfMiddleware = csrf({ cookie: true });
+app.use(csurfMiddleware);
 
 
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
 app.use(express.static("public", staticOptions));
-app.all("*", (req, res, next) => {
+app.use(function (req, res, next) {
 	res.cookie("XSRF-TOKEN", req.csrfToken());
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+	res.setHeader(
+	'Access-Control-Allow-Headers',
+	'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 	next();
   });
+
 //Home page
 app.get("/", (req, res) => {
-    const sessionCookie = req.cookies.session || '';
+	const sessionCookie = req.cookies.__session || '';
+
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -96,7 +107,13 @@ app.get("/", (req, res) => {
 });
 //Login page
 app.get("/login", (req, res) => {
-    const sessionCookie = req.cookies.session || '';
+	console.log(" ");
+	console.log(" ");
+	console.log(" TOKEN:" + req.csrfToken());
+	console.log(" ");
+	console.log(" ");
+	const sessionCookie = req.cookies.__session || '';
+	
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -114,7 +131,7 @@ app.get("/login", (req, res) => {
 });
 //Register page
 app.get("/register", (req, res) => {
-    const sessionCookie = req.cookies.session || '';
+    const sessionCookie = req.cookies.__session || '';
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -132,7 +149,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/toast", (req,res) => {
-    const sessionCookie = req.cookies.session || '';
+    const sessionCookie = req.cookies.__session || '';
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -140,7 +157,7 @@ app.get("/toast", (req,res) => {
 		admin.auth().getUser(uid).then(function(userRecord) {
 			// See the UserRecord reference doc for the contents of userRecord.
 			data = userRecord.toJSON();
-			res.render("toast", {title: "ToastLearn", user: data});
+			res.redirect('/');
 		});
 	  })
 	  .catch(error => {
@@ -151,7 +168,8 @@ app.get("/toast", (req,res) => {
 
 app.get('/toast/:id', function(req, res) {
 	var id = req.params.id;
-	const sessionCookie = req.cookies.session || '';
+	const sessionCookie = req.cookies.__session || '';
+	console.log(sessionCookie);
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -174,34 +192,16 @@ app.get('/toast/:id', function(req, res) {
 					res.render("toast", {title: sub.data().name+" | ToastLearn", user: data, toast: sub.data(), resources: json});
 				});
 			});
-	  	})
+		  });
+	  })
 	  .catch(error => {
-		// Session cookie is unavailable or invalid. Force user to login.
-
-		//TEMP
-		db.collection('subjects').doc(id).get().then(function(sub){
-			console.log(sub.data());
-			data = userRecord.toJSON();
-
-
-			db.collection("subjects/"+id+"/resources").get()
-			.then(query=>{
-				let json = query.docs.map(doc=>{
-					let x = doc.data()
-						x['_id']=doc.id;
-						return x;
-				});
-				
-				res.render("toast", {title: sub.data().name+" | ToastLearn", user: false, toast: sub.data(), resources: json});
-			});
-		});
+		res.redirect("/login");
 	  });
-});
 });
 
 app.get('/profile', (req, res) => {
 	
-	const sessionCookie = req.cookies.session || '';
+	const sessionCookie = req.cookies.__session || '';
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
@@ -216,12 +216,8 @@ app.get('/profile', (req, res) => {
 	  });
 });
 
-app.get("/login", function (req, res) {
-	res.render("login", {title: "ToastLearn"});
-});
-
   app.get("/logout", (req, res) => {
-	res.clearCookie("session");
+	res.clearCookie("__session");
 	res.redirect("/login");
   });
 
@@ -234,14 +230,15 @@ app.post("/sessionLogin", (req, res) => {
 	const idToken = req.body.idToken.toString();
   
 	const expiresIn = 60 * 60 * 24 * 5 * 1000;
-  
+
+
 	admin
 	  .auth()
 	  .createSessionCookie(idToken, { expiresIn })
 	  .then(
 		(sessionCookie) => {
 		  const options = { maxAge: expiresIn, httpOnly: true };
-		  res.cookie("session", sessionCookie, options);
+		  res.cookie("__session", sessionCookie, options);
 		  res.end(JSON.stringify({ status: "success" }));
 		},
 		(error) => {
@@ -249,9 +246,6 @@ app.post("/sessionLogin", (req, res) => {
 		}
 	  );
   });
-
-  function getSubjectsAsJSON(){
-  }
 
 
 

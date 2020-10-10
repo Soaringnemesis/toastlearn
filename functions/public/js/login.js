@@ -1,8 +1,12 @@
+const { convertRuleOptions } = require("tslint/lib/configuration");
 
-  document.getElementById("login").addEventListener("submit", (event) => {
+
+console.log(Cookies.get("XSRF-TOKEN"));
+document.getElementById("login").addEventListener("submit", (event) => {
     event.preventDefault();
     const login = $("#email").val();
     const password = $("#password").val();
+
     firebase.auth().signInWithEmailAndPassword(login, password)
                 .then(({ user }) => {
                   return user.getIdToken().then((idToken) => {

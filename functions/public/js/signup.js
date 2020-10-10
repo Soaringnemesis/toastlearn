@@ -1,4 +1,3 @@
-
   document.getElementById("register").addEventListener("submit", (event) => {
     event.preventDefault();
     const login = $("#email").val();
@@ -21,7 +20,7 @@
                     headers: {
                       Accept: "application/json",
                       "Content-Type": "application/json",
-                      "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                      "CSRF-Token": Cookies.get("csrfToken"),
                     },
                     body: JSON.stringify({ idToken }),
                   });
