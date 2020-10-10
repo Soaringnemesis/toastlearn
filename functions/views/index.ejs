@@ -1,0 +1,32 @@
+
+    
+<%- include('partials/header') %>
+
+    <div class="contentContainer">
+
+        <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" name="search" placeholder="Search for a Toast">
+        </div>
+        
+        <div class="toastContainer">
+            <% for (var x = 0; x < subjects.length; x++){ %>
+            <div class="toast">
+                <a class="innerToast" href="/toast/<%= subjects[x]._id %>">
+                    <div class="toastHeader">
+                        
+                    </div>
+                    <h3><%= subjects[x].name %></h3>
+                    <p>420 people learning</p>
+                </a>
+            </div>
+            <% } %>
+        </div>
+       
+
+        
+
+
+
+    </div>
+    <%- include('partials/footer') %>

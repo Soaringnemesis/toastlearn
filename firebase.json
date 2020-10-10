@@ -1,0 +1,32 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "pub",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "app"
+      }
+    ],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "functions": {
+    "runtime": "nodejs10",
+    "source": "functions"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 7004
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
+}
