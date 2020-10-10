@@ -14,6 +14,14 @@ db = firestore.client()
 
 def create_database_values(topics):
     """
+     WAS USED FOR CREATING DATA FROM PREDETERMINED TOPICS LIST:
+        CLIENT SIDE WILL NOW ADD TOPIC
+        CALL 
+            
+            create_toast_topic( topic, tag )
+        
+                FOR CORRECT FUNCTION    
+    ------------------------------------------------------ 
     Input:
         topics: list of tuples
             each tuple is of form  ( topic, subject(tag) )
@@ -54,13 +62,13 @@ def create_database_values(topics):
                     "videos" : video_info,
                     "wiki":wiki_info
                     }
-
-    #print(data) 
-    #print(topics)
     return data
 
 def retrieve_toast_topics():
     """ 
+        WAS USED FOR ADDING PRELIMINARY TOPICS
+        CLIENT SIDE WILL NOW ADD TOPICS
+    ------------------------------------------------------
         Retrieves the toast topics from the txt file
         Outputs a list of tuples of form:       ( topic, subject )
     """
@@ -82,21 +90,17 @@ def retrieve_toast_topics():
                 topics.append( (curr_topic, curr_tag))
     return topics
 
-def add_to_database(data):
-    """   subject                                         resources
-        collection -> Document                         -> collection
-                        name: Implicit differentiation
-                        tag: calculus1
-    
-         Documents       
-    -->     type : video
-            url : url 
+def add_data(data):
+    """   
+    WAS USED TO ADD DATA FROM PREDETERMINED TOPICS LIST INTO DATABASE
+    CALL add_topic_database(collection) to add individual topic
+    ---------------------------------------------------------
 
-            or
 
-            type :  wiki
-            url : url
+    Adds data from pre-determined topics file and adds them to database 
     """
+
+    # collection for testing purposes
     # doc_ref = db.collection("subjects").document("3")
 
     # doc_ref_one = db.collection("subjects").document("100")
@@ -174,10 +178,113 @@ def add_to_database(data):
             i += 1
 
 
-    
 
-if __name__ == "__main__":
-    
+def create_toast_data(topic, tag):
+    """
+        Creates data for user searched toast topic
+    """
+
+    curr_collection = {}
+
+    video_info = youtube.retrieve_youtube_data(topic + " " + tag)
+    wiki_info = wiki.retrieve_wiki_data(topic + " " + tag)
+
+    curr_collection = {
+        tag: {
+            topic : {
+                "videos" : video_info,
+                "wiki" : wiki_info
+            }
+        }    
+    }
+
+    add_topic_database(curr_collection)
+
+def add_topic_database(collection):
+    """
+        Adds user-wanted toast topic to database and increments count of topics
+    """
+
+    docID_ref_one = db.collection("num_topics").document('0').get()
+    docID = docID_ref_one.to_dict()['count']
+
+
+    subject = list(collection.keys())[0]
+    topic  = list(collection[subject].keys())[0]
+    #print(topic)
+    videos = collection[subject][topic]['videos']
+    wiki = collection[subject][topic]['wiki']
+    #print(videos)
+    #print("_____________________")
+    #print(wiki)
+
+    topic_doc_ref = db.collection("subjects")
+
+    # creating a document for every topic 
+    curr_doc = topic_doc_ref.document(str(docID))
+
+
+    # Document- name:Differentiation, tag: calculus
+    curr_doc.set(
+        {"name":topic,
+        "tag":subject
+    })
+
+    # create/dive into a collection called resources
+    resources_collection = curr_doc.collection("resources")
+
+    resource_num = 0
+    for video in videos:
+
+        # create a document with index resource_num
+        curr_resource = resources_collection.document(str(resource_num))
+        url = video["url"]
+        title = video["title"]
+        channel = video["content_author"]
+
+        curr_resource.set({
+                        "type":"video",
+                        "url":url,
+                        "title":title,
+                        "channel":channel
+        })
+
+        resource_num+=1
+
+    # add one more document, the Wiki page
+    curr_resource = resources_collection.document(str(resource_num))
+
+    # add wiki into resources
+    url = wiki["url"]
+    title = wiki["title"]
+    snippet = wiki["snippet"]
+
+    curr_resource.set({"url":url,
+                "title":title,
+                "snippet":snippet,
+                "type":"wiki"
+    })
+
+
+
+    # increment count variable in database
+    add_count(docID)
+    #print(docID)
+
+def add_count(docID):
+    """
+        Sets count variable in to (current count + 1)
+    """
+    docID_ref_one = db.collection("num_topics").document('0')
+
+    docID_ref_one.set(
+        {
+            'count': (docID+1)
+        }
+    )
+
+#if __name__ == "__main__":
+    # used for testing purposes
     # doc_ref.set({"name":"Typography"})
             # resources = doc_ref.collection("resources").document("1")
 
@@ -186,12 +293,18 @@ if __name__ == "__main__":
     #add_values(topics)
 
     #topics = retrieve_toast_topics()
-    #data = create_database_values(topics)
+    #data = {}
+    # create_database_values(topics)
     #print(data)
     #with open('data.txt','w') as outfile:
     #json.dump(data,outfile)
-    with open('data.json') as json_file:
-        data = json.load(json_file)
-        add_to_database(data)
+    #tag = "python"
+    #topic = "Yield functions"
+
+    #print(create_toast_data(topic,tag))
+
+    #with open('data.json') as json_file:
+    #    data = json.load(json_file)
+    #    #add_data(data)
     
     #pickle.dump(data,open("data.p","w"))
