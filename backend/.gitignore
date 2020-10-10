@@ -1,4 +1,4 @@
-.txt
-.md
+*.txt
+*.md
 .env
 .json
