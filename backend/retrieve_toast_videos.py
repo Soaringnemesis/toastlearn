@@ -6,30 +6,49 @@ youtube = build('youtube','v3',developerKey= api_key)
 
 
 def create_database_values(topics):
+    '''
+    Input:
+        topics: list of tuples
+            each tuple is of form  ( topic, subject(tag) )
+
+    Output:
+        data =  {
+                subject : {
+                    topic : {
+                        videos : [list of videos],
+                        articles: wikipedia_info (will be added in when scraping wikipedia)
+                    }
+                }
+            }
+    '''
+
     data = {}  # data to send to firebase
 
+    #loop through the list of tuples
     for tup in topics:
+
         topic = tup[0]
         tag = tup[1]
 
+        # retrieve youtube videos 
+        video_info = retreive_youtube_data(topic + " " + tag)
         if not data.get(tag):
-            video_info = retreive_youtube_data(topic + " " + tag)
             data[tag] = {
                 topic : { 'videos' : video_info}
             }
         else:
             data[tag][topic] = {'videos' : video_info}
 
-    print(data) 
+    #print(data) 
     #print(topics)
-    
+    return data
     
 
-    #retreive_youtube_data("Implicit Differentiation" + " " + "calculus")
 
 def retrieve_toast_topics():
     ''' 
         Retrieves the toast topics from the txt file
+        Outputs a list of tuples of form:       ( topic, subject )
     '''
     f = open('toast_topics.txt','r')
 
@@ -51,6 +70,17 @@ def retrieve_toast_topics():
 
 def retreive_youtube_data(query):
     '''
+    Sends a get request to YouTube API and inputs the response into a list of videos.
+
+    Each video is of form:
+        video = {
+            'thumbnail_image' : "",
+            'url' : video.full_url (empty for video),
+            'title' : video.title,
+            'content_author': vide.content_author,
+            'type': 'video'
+        }
+
     Thumbnail Image direct link (if not a video)
     Content url (youtube link, wikipedia link)
     Content title
@@ -94,10 +124,11 @@ def retreive_youtube_data(query):
 
 
 if __name__ == "__main__":
-    print("START OF SCRIPT")
-    print("----------------------")
+    #print("START OF SCRIPT")
+    #print("----------------------")
     #get_key()
-    topics = retrieve_toast_topics()
-    create_database_values(topics)
 
-    print("END OF SCRIPT")
+    topics = retrieve_toast_topics()
+    data = create_database_values(topics)
+
+    #print("END OF SCRIPT")
