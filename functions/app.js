@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 	admin.auth().verifySessionCookie(
 	  sessionCookie, true /** checkRevoked */)
 	  .then((decodedClaims) => {
-
+		var uid = decodedClaims.user_id;
 		admin.auth().getUser(uid).then(function(userRecord) {
 			// See the UserRecord reference doc for the contents of userRecord.
 			console.log(userRecord);

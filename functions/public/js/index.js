@@ -11,3 +11,25 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
 
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+var dropdown = false
+  $(".profile a").click(function(){
+    dropdown = !dropdown;
+    if(dropdown){
+        $(this).parent().addClass("active");
+    } else {
+        $(this).parent().removeClass("active");
+    }
+  });
+
+  $('body').click(function(evt){    
+    if(evt.target.id == "profileMenu"){
+       return;
+    }
+    if($(evt.target).closest('#profileMenu').length){
+       return;        
+    }
+       
+    $(".profile").removeClass("active");
+    dropdown=false;
+
+});

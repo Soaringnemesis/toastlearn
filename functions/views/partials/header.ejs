@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
     <title><%= title %></title>
@@ -14,11 +15,6 @@
 </head>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-    <script src="/js/index.js"></script>
 
     <!-- Templated header -->
     <div class="header">
@@ -51,11 +47,17 @@
                             <p>Your Toasts</p>
                         </a>
                     </li>
-                    <li class="headerLink profile">
+                    <li class="headerLink profile" id="profileMenu">
                         <a>
-                            <img class="user" src="/img/profilePic.png">
-                            <p><%= user.displayName %></p> <!-- Username -->
+                            <img draggable=false class="user" src="/img/profilePic.png">
+                            <p><%= user.displayName %>&emsp;<i class="fas fa-angle-down"></i></p> <!-- Username -->
                         </a>
+
+                        <div class="dropdown">
+                            <a id="dropdownSettings" href="/settings">Settings</a>
+                            <a id="dropdownLogout" href="/logout">Log Out</a>
+
+                        </div>
                     </li>
                     <% } %>
 
