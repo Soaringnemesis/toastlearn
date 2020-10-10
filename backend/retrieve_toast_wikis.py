@@ -1,5 +1,4 @@
 import requests, random
-from retrieve_toast_videos import retrieve_toast_topics
 
 S = requests.Session()
 
@@ -16,9 +15,7 @@ def retrieve_wiki_data(topic):
 	R = S.get(url=URL, params=PARAMS)
 	DATA = R.json()
 
-	allTitles = []
-	snippets = []
-	page = DATA['query']['search'][0]
+	page = DATA["query"]["search"][0]
 
 	article = {}
 	article["title"], article["snippet"] = page["title"], page["snippet"]
@@ -28,14 +25,14 @@ def retrieve_wiki_data(topic):
 	return article
 
 
-if __name__ == '__main__':
-	print("START OF SCRIPT")
-	print("----------------------")
+#if __name__ == "__main__":
+	#print("START OF SCRIPT")
+	#print("----------------------")
 	#get_key()
-	topics = retrieve_toast_topics()
-	for tup in topics:
-		topic = tup[0]
-		tag = tup[1]
-		print(retrieve_wiki_data(topic + " " + tag))
-	print("END OF SCRIPT")
+	#topics = retrieve_toast_topics()
+	#for tup in topics:
+	#	topic = tup[0]
+	#	tag = tup[1]
+	#	print(retrieve_wiki_data(topic + " " + tag))
+	#print("END OF SCRIPT")
 	
