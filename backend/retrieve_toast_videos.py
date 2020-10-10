@@ -38,7 +38,7 @@ def retrieve_toast_topics():
 
     for x in f:
         arr = x.replace("\n","").split(" ")
-        #print(arr)
+        # print(arr)
         if x.split(" ")[0] == 'tag:':
             curr_tag = " ".join(arr[1:])
             #print(curr_tag)
