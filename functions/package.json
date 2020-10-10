@@ -17,10 +17,13 @@
   "homepage": "https://github.com/Soaringnemesis/toastlearn#readme",
   "dependencies": {
     "consolidate": "^0.16.0",
+    "cookie-parser": "^1.4.5",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "firebase": "^7.23.0",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
+    "firebaseui": "^4.6.1",
     "handlebars": "^4.7.6",
     "path": "^0.12.7"
   },
