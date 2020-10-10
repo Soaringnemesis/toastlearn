@@ -1,0 +1,37 @@
+{
+  "name": "toastlearn",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soaringnemesis/toastlearn.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Soaringnemesis/toastlearn/issues"
+  },
+  "homepage": "https://github.com/Soaringnemesis/toastlearn#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "consolidate": "^0.16.0",
+    "cookie-parser": "^1.4.5",
+    "csurf": "^1.11.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.1.0",
+    "firebase": "^7.23.0",
+    "firebase-admin": "^9.2.0",
+    "firebase-functions": "^3.11.0",
+    "firebaseui": "^4.6.1",
+    "handlebars": "^4.7.6",
+    "path": "^0.12.7"
+  },
+  "description": ""
+}

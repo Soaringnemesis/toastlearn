@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <!-- Add fonts, stylesheets -->
+
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <link href="/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Templated header -->
+    <div class="header">
+
+        <div class="headerInner">
+            <div class="headerLogo">
+                <a href="/">
+                    <img src="/img/logo.svg">
+                </a>
+            </div>
+            <div class="headerLinks">
+                <ul class="links">
+
+                    
+                    <!-- Only show if user IS logged in -->
+                    <% if(user == false){ %>
+                    <li class="headerLink">
+                    <a href="/register">
+                        <p>Register</p>
+                    </a>
+                    </li>
+                    <li class="headerLink">
+                        <a href="/login">
+                            <p>Log In</p>
+                        </a>
+                    </li>
+                    <% } else { %>
+                    <li class="headerLink">
+                        <a href="/">
+                            <p>Your Toasts</p>
+                        </a>
+                    </li>
+                    <li class="headerLink profile" id="profileMenu">
+                        <a>
+                            <img draggable=false class="user" src="/img/profilePic.png">
+                            <p><%= user.displayName %>&emsp;<i class="fas fa-angle-down"></i></p> <!-- Username -->
+                        </a>
+
+                        <div class="dropdown">
+                            <a id="dropdownSettings" href="/settings">Settings</a>
+                            <a id="dropdownLogout" href="/logout">Log Out</a>
+
+                        </div>
+                    </li>
+                    <% } %>
+
+                    <!-- End -->
+                    
+                    
+                </ul>
+            </div>
+        </div>
+
+
+
+    </div>
