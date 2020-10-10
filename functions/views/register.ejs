@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+    <div class="contentContainer">
+
+        <h1>Register</h1>
+
+        <div class="container small">
+            <div class="toastHeader">
+                <form id="register">
+                    <input type="text" name="email" id="email" placeholder="Email">
+                    <input type="text" name="username" id="username">
+                    <input type="password" name="password" id="password">
+                    <input type="submit" value="Submit">
+                </form>
+                        
+            </div>
+        </div>
+
+        
+
+
+
+    </div>
+<script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<script src="/js/signup.js"></script>
+
+<%- include('partials/footer') %>

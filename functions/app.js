@@ -6,19 +6,15 @@ const functions     = require('firebase-functions');
 const express       = require('express')
 const admin         = require('firebase-admin');
 const cookieParser  = require('cookie-parser');
+const csrf          = require("csurf");
+const exphbs        = require("express-handlebars");
+const bodyParser    = require("body-parser");
 
-const exphbs = require("express-handlebars");
 
-
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 const app = express();
 
-app.engine("hbs", exphbs({defaultLayout: "layout.hbs"}));
-app.set("views", "./views");
-app.set("view engine", "hbs");
-
-app.use(cookieParser());
 
 let staticOptions = {
     dotfiles: "ignore",
@@ -28,53 +24,146 @@ let staticOptions = {
 }
 
 
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
+
+app.set("views", "./views");
+app.set("view engine", "ejs");
 
 app.use(express.static("public", staticOptions));
-
+app.all("*", (req, res, next) => {
+	res.cookie("XSRF-TOKEN", req.csrfToken());
+	next();
+  });
 //Home page
 app.get("/", (req, res) => {
-    let uid = "";
-    if(req.decodedClaims){
-        uid = req.decodedClaims.uid;
-    }
-    //let uid =  req.decodedClaims.uid;
-    res.render("index", {title: "ToastLearn", uid: uid});
+    const sessionCookie = req.cookies.session || '';
+	admin.auth().verifySessionCookie(
+	  sessionCookie, true /** checkRevoked */)
+	  .then((decodedClaims) => {
+
+		admin.auth().getUser(uid).then(function(userRecord) {
+			// See the UserRecord reference doc for the contents of userRecord.
+			console.log(userRecord);
+			data = userRecord.toJSON();
+			res.render("index", {title: "ToastLearn", user: data});
+		});
+	  })
+	  .catch(error => {
+		// Session cookie is unavailable or invalid. Force user to login.
+		res.render("index", {title: "ToastLearn", user: false});
+	  });
 });
 //Login page
 app.get("/login", (req, res) => {
-    res.render("login", {});
+    const sessionCookie = req.cookies.session || '';
+	admin.auth().verifySessionCookie(
+	  sessionCookie, true /** checkRevoked */)
+	  .then((decodedClaims) => {
+		var uid = decodedClaims.user_id;
+		admin.auth().getUser(uid).then(function(userRecord) {
+			// See the UserRecord reference doc for the contents of userRecord.
+			console.log(userRecord);
+			data = userRecord.toJSON();
+			res.render("login", {title: "ToastLearn", user: data});
+		});
+	  })
+	  .catch(error => {
+		// Session cookie is unavailable or invalid. Force user to login.
+		res.render("login", {title: "ToastLearn", user: false});
+	  });
 });
 //Register page
 app.get("/register", (req, res) => {
-    res.render("register", {});
-});
-
-app.get("/sessionLogin", (req, res) => {
-    const idToken = req.query.idToken;
-	setCookie(idToken, res);
-});
-
-function setCookie(idToken, res) {
-	// Set session expiration to 5 days.
-	// Create the session cookie. This will also verify the ID token in the process.
-	// The session cookie will have the same claims as the ID token.
-	
-	const expiresIn = 60 * 60 * 24 * 5 * 1000;
-	admin.auth().createSessionCookie(idToken, {expiresIn}).then((sessionCookie) => {
-		
-		// Set cookie policy for session cookie and set in response.
-		const options = {maxAge: expiresIn, httpOnly: true, secure: true};
-		res.cookie('__session', sessionCookie, options);
-		
-		admin.auth().verifyIdToken(idToken).then(function(decodedClaims) {
-			res.redirect('/');
+    const sessionCookie = req.cookies.session || '';
+	admin.auth().verifySessionCookie(
+	  sessionCookie, true /** checkRevoked */)
+	  .then((decodedClaims) => {
+		var uid = decodedClaims.user_id;
+		admin.auth().getUser(uid).then(function(userRecord) {
+			// See the UserRecord reference doc for the contents of userRecord.
+			console.log(userRecord);
+			data = userRecord.toJSON();
+			res.render("register", {title: "ToastLearn", user: data});
 		});
-			
-	}, error => {
-		res.status(401).send(error);
-	});
-}
+	  })
+	  .catch(error => {
+		// Session cookie is unavailable or invalid. Force user to login.
+		res.render("register", {title: "ToastLearn", user: false});
+	  });
+});
+
+app.get("/toast", (req,res) => {
+    const sessionCookie = req.cookies.session || '';
+	admin.auth().verifySessionCookie(
+	  sessionCookie, true /** checkRevoked */)
+	  .then((decodedClaims) => {
+		var uid = decodedClaims.user_id;
+		admin.auth().getUser(uid).then(function(userRecord) {
+			// See the UserRecord reference doc for the contents of userRecord.
+			console.log(userRecord);
+			data = userRecord.toJSON();
+			res.render("toast", {title: "ToastLearn", user: data});
+		});
+	  })
+	  .catch(error => {
+		// Session cookie is unavailable or invalid. Force user to login.
+		res.redirect('/login');
+	  });
+})
+
+app.get('/profile', (req, res) => {
+	
+	const sessionCookie = req.cookies.session || '';
+	admin.auth().verifySessionCookie(
+	  sessionCookie, true /** checkRevoked */)
+	  .then((decodedClaims) => {
+		var uid = decodedClaims.user_id;
+		admin.auth().getUser(uid).then(function(userRecord) {
+			// See the UserRecord reference doc for the contents of userRecord.
+			console.log(userRecord);
+			data = userRecord.toJSON();
+			res.render("index", {title: "ToastLearn", user: data});
+		});
+	  })
+	  .catch(error => {
+		// Session cookie is unavailable or invalid. Force user to login.
+		res.redirect('/login');
+	  });
+});
+
+app.get("/login", function (req, res) {
+	res.render("login", {title: "ToastLearn"});
+});
+
+  app.get("/logout", (req, res) => {
+	res.clearCookie("session");
+	res.redirect("/login");
+  });
+
+app.post("/sessionLogin", (req, res) => {
+	const idToken = req.body.idToken.toString();
+  
+	const expiresIn = 60 * 60 * 24 * 5 * 1000;
+  
+	admin
+	  .auth()
+	  .createSessionCookie(idToken, { expiresIn })
+	  .then(
+		(sessionCookie) => {
+		  const options = { maxAge: expiresIn, httpOnly: true };
+		  res.cookie("session", sessionCookie, options);
+		  res.end(JSON.stringify({ status: "success" }));
+		},
+		(error) => {
+		  res.status(401).send("UNAUTHORIZED REQUEST!");
+		}
+	  );
+  });
+
+
 
 
 exports.app = functions.https.onRequest(app);

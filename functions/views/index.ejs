@@ -1,48 +1,6 @@
 
-    <!-- Templated header -->
-    <div class="header">
-
-        <div class="headerInner">
-            <div class="headerLogo">
-                <a href="/">
-                    <img src="/img/logo.svg">
-                </a>
-            </div>
-            <div class="headerLinks">
-                <ul class="links">
-
-                    <!-- Only show if user IS NOT logged in -->
-                    <li class="headerLink">
-                        <a href="/">
-                            <p>Register</p>
-                        </a>
-                    </li>
-                    <li class="headerLink">
-                        <a href="/">
-                            <p>Log In</p>
-                        </a>
-                    </li>
-                    <!-- End -->
-                    <!-- Only show if user IS logged in -->
-                    <li class="headerLink">
-                        <a href="/">
-                            <p>Your Toasts</p>
-                        </a>
-                    </li>
-                    <li class="headerLink profile">
-                        <a>
-                            <img class="user" src="/img/profilePic.png">
-                            <p>{{uid}}</p> <!-- Username -->
-                        </a>
-                    </li>
-                    <!-- End -->
-                </ul>
-            </div>
-        </div>
-
-
-
-    </div>
+    
+<%- include('partials/header') %>
 
     <div class="contentContainer">
 
@@ -112,6 +70,30 @@
                     </div>
                 </a>
             </div>
+            <div class="toast">
+                <a class="innerToast" href="/">
+                    <div class="toastHeader">
+                        
+                    </div>
+                    <h3>Implicit Differentiation</h3>
+                    <p>420 people learning</p>
+                    <div class="userPreview">
+                        <img class="user" src="./img/profilePic.png">
+                    </div>
+                </a>
+            </div>
+            <div class="toast">
+                <a class="innerToast" href="/">
+                    <div class="toastHeader">
+                        
+                    </div>
+                    <h3>Implicit Differentiation</h3>
+                    <p>420 people learning</p>
+                    <div class="userPreview">
+                        <img class="user" src="./img/profilePic.png">
+                    </div>
+                </a>
+            </div>
         </div>
 
         
@@ -119,3 +101,4 @@
 
 
     </div>
+    <%- include('partials/footer') %>
