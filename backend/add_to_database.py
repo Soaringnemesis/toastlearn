@@ -179,6 +179,11 @@ def add_data(data):
 
 
 
+
+
+
+
+
 def create_toast_data(topic, tag):
     """
         Creates data for user searched toast topic
@@ -198,7 +203,7 @@ def create_toast_data(topic, tag):
         }    
     }
 
-    add_topic_database(curr_collection)
+    print(add_topic_database(curr_collection))
 
 def add_topic_database(collection):
     """
@@ -271,6 +276,8 @@ def add_topic_database(collection):
     add_count(docID)
     #print(docID)
 
+    return docID
+
 def add_count(docID):
     """
         Sets count variable in to (current count + 1)
@@ -283,7 +290,7 @@ def add_count(docID):
         }
     )
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     # used for testing purposes
     # doc_ref.set({"name":"Typography"})
             # resources = doc_ref.collection("resources").document("1")
@@ -298,10 +305,10 @@ def add_count(docID):
     #print(data)
     #with open('data.txt','w') as outfile:
     #json.dump(data,outfile)
-    #tag = "python"
-    #topic = "Yield functions"
+    tag = "python"
+    topic = "Yield functions"
 
-    #print(create_toast_data(topic,tag))
+    create_toast_data(topic,tag)
 
     #with open('data.json') as json_file:
     #    data = json.load(json_file)
