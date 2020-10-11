@@ -2,10 +2,110 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import requests
-import retrieve_toast_videos as youtube
-import retrieve_toast_wikis as wiki
-import pickle
+from googleapiclient.discovery import build
+from decouple import config
+#import retrieve_toast_videos as youtube
+#import retrieve_toast_wikis as wiki
+
 import json
+
+
+S = requests.Session()
+
+URL = "https://en.wikipedia.org/w/api.php"
+
+def retrieve_wiki_data(topic):
+	PARAMS = {
+	    "action": "query",
+	    "format": "json",
+	    "list": "search",
+	    "srsearch": topic
+	}
+
+	R = S.get(url=URL, params=PARAMS)
+	DATA = R.json()
+
+	page = DATA["query"]["search"][0]
+
+	article = {}
+	article["title"], article["snippet"] = page["title"], page["snippet"]
+	page_url = f"https://en.wikipedia.org/wiki/{article['title']}"
+	article["url"] = page_url
+
+	return article
+
+
+#if __name__ == "__main__":
+	#print("START OF SCRIPT")
+	#print("----------------------")
+	#get_key()
+	#topics = retrieve_toast_topics()
+	#for tup in topics:
+	#	topic = tup[0]
+	#	tag = tup[1]
+	#	print(retrieve_wiki_data(topic + " " + tag))
+	#print("END OF SCRIPT")
+	
+
+### YOUTUBE
+
+api_key = config('YOUTUBE_API_KEY')
+youtube = build('youtube','v3',developerKey= api_key)
+
+def retrieve_youtube_data(query):
+    """
+    Thumbnail Image direct link (if not a video)
+    Content url (youtube link, wikipedia link)
+    Content title
+    Content author
+    Type (video, not video)
+    """
+
+
+    video_info = []
+    
+    request = youtube.search().list(
+        part ="snippet",
+        maxResults = 20,
+        q = query,
+        type = "video"
+    )
+
+    response = request.execute()
+    start_url = "https://www.youtube.com/watch?v="
+
+
+    for video in response["items"]:
+
+        full_url = start_url+video["id"]["videoId"]
+        title = video["snippet"]["title"]
+        content_author = video["snippet"]["channelTitle"]
+        curr_dict = {
+            "thumbnail_image" : "",
+            "url" : full_url,
+            "title" : title,
+            "content_author": content_author,
+            "type": "video"
+        }
+        video_info.append(curr_dict)
+
+        #print("VIDEO ID: ", full_url)
+        #print("video_title: ", title)
+        #print("CHANNEL NAME: ", content_author)
+
+    return video_info
+
+
+#if __name__ == "__main__":
+#    print("START OF SCRIPT")
+#    print("----------------------")
+#    #get_key()
+#    topics = retrieve_toast_topics()
+#    create_database_values(topics)
+#
+#    print("END OF SCRIPT")
+
+### END YOUTUBE
 
 cred = credentials.Certificate("/Users/user/Downloads/team-proj-133-firebase-adminsdk-yrh4a-9d7abaa079.json")
 firebase_admin.initialize_app(cred)
@@ -46,8 +146,8 @@ def create_database_values(topics):
         tag = tup[1]
 
         # retrieve scraped values 
-        video_info = youtube.retrieve_youtube_data(topic + " " + tag)
-        wiki_info = wiki.retrieve_wiki_data(topic + " " + tag)
+        video_info = retrieve_youtube_data(topic + " " + tag)
+        wiki_info = retrieve_wiki_data(topic + " " + tag)
 
         # if the current tag is not in dict, add it in
         if not data.get(tag):
@@ -186,8 +286,8 @@ def create_toast_data(topic, tag):
 
     curr_collection = {}
 
-    video_info = youtube.retrieve_youtube_data(topic + " " + tag)
-    wiki_info = wiki.retrieve_wiki_data(topic + " " + tag)
+    video_info = retrieve_youtube_data(topic + " " + tag)
+    wiki_info = retrieve_wiki_data(topic + " " + tag)
 
     curr_collection = {
         tag: {
