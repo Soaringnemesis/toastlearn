@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/Soaringnemesis/toastlearn#readme",
   "dependencies": {
+    "algoliasearch": "^4.5.1",
     "body-parser": "^1.19.0",
     "consolidate": "^0.16.0",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",

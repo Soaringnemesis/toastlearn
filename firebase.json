@@ -23,7 +23,10 @@
   },
   "emulators": {
     "firestore": {
-      "port": 7003
+      "port": 7004
+    },
+    "ui": {
+      "enabled": true
     }
   }
 }
