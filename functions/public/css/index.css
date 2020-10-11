@@ -15,7 +15,12 @@ body {
     margin: 0;
     background: #06051B;
 }
-
+.tag {
+    background: #18babe;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 5px 10px;
+}
 
 .header {
     width: 100%;
@@ -98,9 +103,34 @@ h3 {
     font-size: inherit;
     width: calc(100% - 2em);
 }
-.toastContainer {
+.toastContainer .ais-hits {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+}
+@media (min-width: 600px){
+    .toastContainer .ais-hits {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (min-width: 768px){
+    .toastContainer .ais-hits {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+@media (min-width: 992px){
+    .toastContainer .ais-hits {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+@media (min-width: 1200px){
+    .toastContainer .ais-hits {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
+}
+@media (min-width: 1500px){
+    .toastContainer .ais-hits {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
 }
 .toast {
     position: relative;
@@ -126,17 +156,27 @@ h3 {
     border-radius: 5px 5px 0px 0px;
 
 }
-.toast:nth-of-type(4n-4) .toastHeader{
-    background: #18BABE;
+.ais-hits--item:nth-of-type(4n-4) .toastHeader{
+    background: linear-gradient(to right, #18babe, #9540AA);
 }
-.toast:nth-of-type(4n-3) .toastHeader{
-    background: #9540AA;
+.ais-hits--item:nth-of-type(4n-3) .toastHeader{
+    background: linear-gradient(to right, #9540AA, #272A88);
 }
-.toast:nth-of-type(4n-2) .toastHeader{
-    background: #272A88;
+.ais-hits--item:nth-of-type(4n-2) .toastHeader{
+    background: linear-gradient(to right,  #272A88, #149A77);
 }
-.toast:nth-of-type(4n-1) .toastHeader{
-    background: #149A77;
+.ais-hits--item:nth-of-type(4n-1) .toastHeader{
+    background: linear-gradient(to right, #149A77, #18babe);
+}
+.ais-hits--item {
+    display: flex;
+}
+.ais-hits--item > div {
+    display: flex;
+    width: 100%;
+}
+.ais-hits--item > div > a {
+    width: 100%;
 }
 .user {
     width: 50px;
@@ -192,6 +232,12 @@ a {
   .profile {
       position: relative;
       cursor: pointer;
+  }
+  html body div.ais-search-box {
+      display: inline-block;
+      width: calc(100% - 2em);
+      max-width: unset;
+      
   }
   .profile a {
       display: flex;

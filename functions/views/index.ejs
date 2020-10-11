@@ -6,27 +6,68 @@
 
         <div class="search">
             <i class="fas fa-search"></i>
-            <input type="text" name="search" placeholder="Search for a Toast">
+            <input id="search" type="text" name="search" placeholder="Search for a Toast">
         </div>
         
-        <div class="toastContainer">
-            <% for (var x = 0; x < subjects.length; x++){ %>
+        <div class="toastContainer" id="hits">
+            <!--<% for (var x = 0; x < subjects.length; x++){ %>
             <div class="toast">
                 <a class="innerToast" href="/toast/<%= subjects[x]._id %>">
                     <div class="toastHeader">
                         
                     </div>
                     <h3><%= subjects[x].name %></h3>
-                    <p>420 people learning</p>
+                    <p class="tag"><%= subjects[x].tag %></p>
                 </a>
             </div>
-            <% } %>
+            <% } %>-->
         </div>
-       
-
-        
-
-
-
     </div>
+
+    <%- include('partials/bodyend') %>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.4"></script>
+    <script type="text/html" id="hit-template">
+        <div class="toast">
+            <a class="innerToast" href="/toast/{{ objectID }}">
+                <div class="toastHeader">
+                    
+                </div>
+                <h3>{{ name }}</h3>
+                <p class="tag">{{ tag }}</p>
+            </a>
+        </div>
+    
+    </script>
+
+    <script>
+        const search = instantsearch({
+            appId:"OBHENVV9DR",
+            apiKey:'8d1a2573ea2e76c03b272120b967e9b5',
+            indexName:'Subjects',
+            urlSync:true
+        });
+        search.addWidget(
+            instantsearch.widgets.searchBox({
+                container: '#search'
+            })
+        );
+        search.addWidget(
+            instantsearch.widgets.hits({
+                container: '#hits',
+                hitsPerPage:30,
+                templates:{
+                    item: document.getElementById("hit-template").innerHTML,
+                    empty: "<h3 style='margin-top: 1em'>We had trouble finding that toast.</h3>"
+                }
+            })
+        );
+
+        search.start();
+
+
+
+    </script>
+
     <%- include('partials/footer') %>

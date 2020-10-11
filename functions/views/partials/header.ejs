@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link href="/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.4/dist/instantsearch.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -29,37 +31,24 @@
                 <ul class="links">
 
                     
-                    <!-- Only show if user IS logged in -->
-                    <% if(user == false){ %>
+
                     <li class="headerLink">
-                    <a href="/register">
-                        <p>Register</p>
-                    </a>
-                    </li>
-                    <li class="headerLink">
-                        <a href="/login">
-                            <p>Log In</p>
-                        </a>
-                    </li>
-                    <% } else { %>
-                    <li class="headerLink">
-                        <a href="/">
-                            <p>Your Toasts</p>
+                        <a href="#">
+                            <p>Add a Toast</p>
                         </a>
                     </li>
                     <li class="headerLink profile" id="profileMenu">
                         <a>
                             <img draggable=false class="user" src="/img/profilePic.png">
-                            <p><%= user.displayName %>&emsp;<i class="fas fa-angle-down"></i></p> <!-- Username -->
+                            <p>Anonymous&emsp;<i class="fas fa-angle-down"></i></p> <!-- Username -->
                         </a>
 
                         <div class="dropdown">
-                            <a id="dropdownSettings" href="/settings">Settings</a>
-                            <a id="dropdownLogout" href="/logout">Log Out</a>
+                            <a id="dropdownSettings" href="#">Settings</a>
+                            <a id="dropdownLogout" href="#">Log Out</a>
 
                         </div>
                     </li>
-                    <% } %>
 
                     <!-- End -->
                     
