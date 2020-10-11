@@ -10,7 +10,7 @@
         <div style="display:inline-block" class="tagInput">
             <input class="formatted" id="tag" type="text" name="tag" placeholder="Add a tag">
         </div>
-        <a id="button" style="margin: 0.5em 0 0 0.5em; display:inline-block" class="button">Create <i class="fas fa-spinner loader"></i></a>
+        <a id="button" style="margin: 0.5em 0 0 0.5em; display:inline-block" class="button">Create <i class="fas fa-spinner loader hidden"></i></a>
         
         
         <div class="toastContainer" id="hits">
@@ -56,18 +56,15 @@
                 }
             })
         );
-        var active = false;
-        $("#search").keydown(function(){
-            if(!active){
-                search.start();
-                active = true;
-            }
-            console.log(active);
-        });
+        search.start();
 
+        var processing = false;
         $("#button").click(function(){
-            $(".loader").css("display","initial");
-            runScript();
+            if(!processing){
+                processing=true;
+                $(".loader").removeClass("hidden");
+                runScript();
+            }
         });
 
 
@@ -85,7 +82,8 @@
                     if(id != false){
                         window.location.replace("/toast/"+id);
                     } else {
-                        $(".loader").css("display","none");
+                        $(".loader").addClass("hidden");
+                        processing=false;
                     }
                 }
             });

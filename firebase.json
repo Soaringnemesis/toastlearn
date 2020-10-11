@@ -18,7 +18,7 @@
     ]
   },
   "functions": {
-    "runtime": "nodejs10",
+    "runtime": "nodejs12",
     "source": "functions"
   },
   "emulators": {
