@@ -10,7 +10,7 @@
         <div style="display:inline-block" class="tagInput">
             <input class="formatted" id="tag" type="text" name="tag" placeholder="Add a tag">
         </div>
-        <a id="button" style="margin: 0.5em 0 0 0.5em; display:inline-block" class="button">Create</a>
+        <a id="button" style="margin: 0.5em 0 0 0.5em; display:inline-block" class="button">Create <i class="fas fa-spinner loader"></i></a>
         
         
         <div class="toastContainer" id="hits">
@@ -66,8 +66,8 @@
         });
 
         $("#button").click(function(){
-            var id = runScript();
-            alert(id);
+            $(".loader").css("display","initial");
+            runScript();
         });
 
 
@@ -79,9 +79,16 @@
                     name: $("#search").val(),
                     tag: $("#tag").val()
                 },
-                async: false,
+                async: true,
+                success: function(id){
+                    console.log(id);
+                    if(id != false){
+                        window.location.replace("/toast/"+id);
+                    } else {
+                        $(".loader").css("display","none");
+                    }
+                }
             });
-            return a.responseText;
         }
 
 

@@ -1,20 +1,12 @@
-
-
-
-// Retrieve Wikipedia Description Data
-var request = require('request');
+require("dotenv").config();
 
 const functions     = require('firebase-functions');
 const express       = require('express')
 const admin         = require('firebase-admin');
-const exphbs        = require("express-handlebars");
 const algoliasearch = require("algoliasearch");
-const {PythonShell} = require("python-shell");
+const request = require("request");
 const simpleYT = require("simpleyt");
-const stripHtml = require("string-strip-html");
-const wtf = require("wtf_wikipedia");
 const bot = require("nodemw");
-const usetube = require("usetube");
 
 
 var wikiClient = new bot({
@@ -43,10 +35,8 @@ let staticOptions = {
 
 
 //I don't care if this gets leaked. Who will use it anyways? I'm not paying a dime.
-const APP_ID = functions.config().ALGOLIA_APP_ID;
-const ADMIN_KEY = functions.config().ALGOLIA_ADMIN_KEY;
-const YOUTUBE_KEY = functions.config().YOUTUBE_API_KEY;
-
+const APP_ID = process.env.ALGOLIA_APP_ID; //functions.config().algolia.app_id;
+const ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY;  //functions.config().algolia.admin_key;
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 const index = client.initIndex("Subjects");
 
@@ -56,7 +46,7 @@ exports.addToIndex = functions.firestore.document("subjects/{subjectId}")
 		const data = snapshot.data();
 		const objectID = snapshot.id;
 
-		return index.addObject({...data, objectID});
+		return index.saveObject({...data, objectID});
 	});
 exports.updateIndex = functions.firestore.document("subjects/{subjectId}")
 	.onUpdate((change) => {
@@ -97,6 +87,11 @@ app.get("/toast", (req,res) => {
 app.get('/toast/:id', function(req, res) {
 	var id = req.params.id;
 	db.collection('subjects').doc(id).get().then(function(sub){
+		if(sub.data() == null){
+			res.redirect("/");
+			return;
+		}
+
 
 		db.collection("subjects/"+id+"/resources").get()
 		.then(query=>{
@@ -108,31 +103,29 @@ app.get('/toast/:id', function(req, res) {
 			
 			res.render("toast", {title: sub.data().name+" | ToastLearn", toast: sub.data(), resources: json});
 		});
+	}).catch(function(err){
+		res.redirect("/");
 	});
 });
 
 app.get("/create", function(req, res){
-	res.render("create", {title: "Create a Toast"});
+	res.render("create", {title: "Create a Toast | ToastLearn"});
 });
 
 app.post("/createToast", function(req, res){
+	if(!req.body){
+		res.send(false);
+		return;
+	}
 	var name = req.body.name;
 	var tag = req.body.tag;
 
-	console.log(name, tag);
 
-	/*PythonShell.run("./add_to_database.py", {
-		mode: "text",
-		scriptPath: "./modules/",
-		args: [name, tag]
-	}, function(err, results){
-		if(err){
-			console.log(err);
-			results = err;
-		}
-		console.log(results);
-		res.send(results);
-	});*/
+	if((name == "") || (tag == "")){
+		res.send(false);
+		return;
+	}
+
 	var numDocs = db.collection("num_topics").doc("0").get().then(query => {
 
 		console.log(query.data().count);
@@ -151,7 +144,6 @@ app.post("/createToast", function(req, res){
 				}).then(videos => {
 					console.log(videos);
 					var vids = videos;
-					var index = 0;
 					for(var x = 0; x < vids.length; x++){
 						if(x > 20){
 							break;
@@ -165,40 +157,62 @@ app.post("/createToast", function(req, res){
 						
 						db.collection("subjects").doc(numDocs.toString()).collection("resources").doc(x.toString()).set(d);
 						x++;
-						index = x;
 					}
+					var topic = name;
 
+					var url = `https://en.wikipedia.org/w/api.php?action=query&prop=extract&list=search&srsearch=${topic}&format=json`;
+					//console.log(url);
+					request(url, function (err, response, body) {
+						if(err){
+							var error = "cannot connect to the server";
+							//console.log(error);
 
+							return {}
+						} else {
+							const data = JSON.parse(body)
 
-					/*wikiClient.getArticle(name, function(err, data) {
-						// error handling
-						if (err) {
-						  console.error(err);
-						  return;
-						}
+							// get the first page as it is the most relevant
+							var page = data.query.search[0]
 
+							var page_url = `https://en.wikipedia.org/wiki/${page.title}`;
 
-						wikiClient.parse(data, name, function(e){
-							console.log(e);
-						})
+							//console.log('PAGE:', article)
+							console.log(page.title)
+
+							// this is the url to request information about the page to be used
+							var curr_page_url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${page.title}&exchars=750&explaintext=1`;
+							request(curr_page_url, function(err, response,body2) {
+								if(err){
+									var error = "cannot connect to the server";
+									console.log(error);
 						
-					});*/
+								} else {
+										const data = JSON.parse(body2)
 
+										// theres only one item in this for loop so snippet will have the description
+										var snippet = ''
+										for (id in data.query.pages){
+											snippet = data.query.pages[id].extract
+										}
 
-					
-
-				})
-				
+										// Uncomment below and Add to database here
+										var article = {
+											"title" : page.title,
+											"snippet" : snippet,
+											"url " : page_url,
+											"type" : "wiki"
+										}
+										db.collection("subjects").doc(numDocs.toString()).collection("resources").doc("wiki").set(article).then(function(){
+											res.send(numDocs.toString());
+										});
+								}
+							});
+						}
+					});
+				});
 			});
-
 		});
-
-	}, function(err){
-		console.log(err);
-		res.redirect("/");
 	});
-
-	
 });
 
 

@@ -5,3 +5,5 @@ firebase-key.json
 team-proj-133-firebase-adminsdk-yrh4a-f083aba54c.json
 
 env/
+
+.runtimeconfig.json

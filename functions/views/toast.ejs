@@ -17,7 +17,13 @@ function getId(url) {
             <div class="nameContainer">
                 <p class="bold" style="margin-bottom: 0;">A toast about...</p>
                 <h1><%= toast.name %></h1>
-                
+                <% for (var x = 0; x < resources.length; x++) {%>
+                    <% if(resources[x].type == "wiki") {%>
+                        <p><%= resources[x].snippet%></p>
+                    <% break;
+                    }
+                } %>
+
             </div>
         </div>
 

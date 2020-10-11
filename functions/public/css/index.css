@@ -240,6 +240,14 @@ a {
       max-width: unset;
       
   }
+  @keyframes spin {
+      from { transform: rotate(0deg)}
+      to {transform: rotate(360deg)}
+  }
+  .loader {
+    animation: spin 1s infinite;
+    display: none;
+  }
   .profile a {
       display: flex;
       align-items: center;
