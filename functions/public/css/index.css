@@ -14,6 +14,7 @@ h1,h2,h3,h4,h5,h6,.bold {
 body {
     margin: 0;
     background: #06051B;
+    overflow-y: scroll;
 }
 .tag {
     background: #18babe;
@@ -249,7 +250,7 @@ a {
   .profile a > * {
       display: inline-block;
   }
-  .form input[type="text"], .form input[type="password"]{
+  .form input[type="text"], .form input[type="password"], input[type="text"].formatted{
       padding: 1em;
       width: calc(100% - 2em);
       background: #171625 !important;
@@ -259,6 +260,9 @@ a {
       font-size: 20px;
       margin-top: 10px;
       margin-bottom: 20px;
+  }
+  #tag {
+      max-width: 300px;
   }
   .form input:-webkit-autofill {
     background: #171625 !important;
@@ -354,4 +358,21 @@ input[type="submit"]:hover,.button:hover {
 .toastPageHeader {
     display: flex;
     align-items: center;
+}
+.ais-search-box--magnifier-wrapper,.ais-search-box--reset-wrapper {
+    display: none !important;
+}
+.search.newToast {
+    font-size: calc(2vw + 40px);
+    width: 100%;
+}
+.search.newToast > div {
+    width: 100%;
+
+}
+.search.newToast > div > input{
+    width: 100%; padding-left: 0;
+}
+.confirm {
+    color: #18BABE;
 }

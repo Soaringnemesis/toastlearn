@@ -7,6 +7,7 @@ const express       = require('express')
 const admin         = require('firebase-admin');
 const exphbs        = require("express-handlebars");
 const algoliasearch = require("algoliasearch");
+const {PythonShell} = require("python-shell");
 
 
 admin.initializeApp();
@@ -26,9 +27,9 @@ let staticOptions = {
 
 
 
-//I don't care if this gets leaked. Who will use it anyways?
-const APP_ID = "OBHENVV9DR";
-const ADMIN_KEY = "3a7b89776da3b87012ef76126a9783a6";
+//I don't care if this gets leaked. Who will use it anyways? I'm not paying a dime.
+const APP_ID = functions.config().ALGOLIA_APP_ID;
+const ADMIN_KEY = functions.config().ALGOLIA_ADMIN_KEY;
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 const index = client.initIndex("Subjects");
@@ -66,8 +67,7 @@ app.get("/", (req, res) => {
 					x['_id']=doc.id;
 					return x;
 			});
-			console.log("LOOKIE HERE!");
-			console.log(json);
+
 			res.render("index", {title: "All Toasts | ToastLearn", user: false, subjects: json});
 			
 	});
@@ -81,8 +81,6 @@ app.get("/toast", (req,res) => {
 app.get('/toast/:id', function(req, res) {
 	var id = req.params.id;
 	db.collection('subjects').doc(id).get().then(function(sub){
-		console.log(sub.data());
-
 
 		db.collection("subjects/"+id+"/resources").get()
 		.then(query=>{
@@ -97,11 +95,30 @@ app.get('/toast/:id', function(req, res) {
 	});
 });
 
+app.get("/create", function(req, res){
+	res.render("create", {title: "Create a Toast"});
+});
 
+app.post("/createToast", function(req, res){
+	var name = req.body.name;
+	var tag = req.body.tag;
 
-app.get('/searchQuery', function(req, res){
-	var val = req.query.search;
-})
+	console.log(name, tag);
+
+	PythonShell.run("./add_to_database.py", {
+		mode: "text",
+		scriptPath: "./",
+		pythonPath: "./env/Scripts/python.exe",
+		args: [name, tag]
+	}, function(err, results){
+		if(err){
+			console.log(err);
+			results = err;
+		}
+		console.log(results);
+		res.send(results);
+	});
+});
 
 
 

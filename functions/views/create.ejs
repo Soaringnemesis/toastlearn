@@ -1,0 +1,90 @@
+
+    
+<%- include('partials/header') %>
+
+    <div class="contentContainer">
+
+        <div class="search newToast">
+            <input id="search" type="text" name="search" placeholder="Name a Topic">
+        </div>
+        <div style="display:inline-block" class="tagInput">
+            <input class="formatted" id="tag" type="text" name="tag" placeholder="Add a tag">
+        </div>
+        <a id="button" style="margin: 0.5em 0 0 0.5em; display:inline-block" class="button">Create</a>
+        
+        
+        <div class="toastContainer" id="hits">
+        </div>
+    </div>
+
+    <%- include('partials/bodyend') %>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.4"></script>
+    <script type="text/html" id="hit-template">
+        <div class="toast">
+            <a class="innerToast" href="/toast/{{ objectID }}">
+                <div class="toastHeader">
+                    
+                </div>
+                <h3>{{ name }}</h3>
+                <p class="tag">{{ tag }}</p>
+            </a>
+        </div>
+    
+    </script>
+
+    <script>
+        const search = instantsearch({
+            appId:"OBHENVV9DR",
+            apiKey:'8d1a2573ea2e76c03b272120b967e9b5',
+            indexName:'Subjects',
+            urlSync:true
+        });
+        search.addWidget(
+            instantsearch.widgets.searchBox({
+                container: '#search'
+            })
+        );
+        search.addWidget(
+            instantsearch.widgets.hits({
+                container: '#hits',
+                hitsPerPage:10,
+                templates:{
+                    item: document.getElementById("hit-template").innerHTML,
+                    empty: "<h3 class='confirm' style='margin-top: 1em'>No similar toasts exist!</h3>"
+                }
+            })
+        );
+        var active = false;
+        $("#search").keydown(function(){
+            if(!active){
+                search.start();
+                active = true;
+            }
+            console.log(active);
+        });
+
+        $("#button").click(function(){
+            var id = runScript();
+            alert(id);
+        });
+
+
+        function runScript(){
+            var a = $.ajax({
+                type: "POST",
+                url: "/createToast",
+                data: {
+                    name: $("#search").val(),
+                    tag: $("#tag").val()
+                },
+                async: false,
+            });
+            return a.responseText;
+        }
+
+
+    </script>
+
+    <%- include('partials/footer') %>
