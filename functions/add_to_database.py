@@ -8,7 +8,7 @@ import pickle
 import sys
 import json
 
-cred = credentials.Certificate("./team-proj-133-firebase-adminsdk-yrh4a-f083aba54c")
+cred = credentials.Certificate("./team-proj-133-firebase-adminsdk-yrh4a-f083aba54c.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -184,9 +184,9 @@ def create_toast_data(topic, tag):
     """
         Creates data for user searched toast topic
     """
-    console.log("Start");
 
     curr_collection = {}
+
 
     video_info = youtube.retrieve_youtube_data(topic + " " + tag)
     wiki_info = wiki.retrieve_wiki_data(topic + " " + tag)
@@ -200,11 +200,8 @@ def create_toast_data(topic, tag):
         }    
     }
 
-    add_topic_database(curr_collection)
+    print(add_topic_database(curr_collection))
 
-    docID_ref_one = db.collection("num_topics").document('0').get()
-    docID = docID_ref_one.to_dict()['count']
-    print(docID)
     sys.stdout.flush()
 
 def add_topic_database(collection):
@@ -213,9 +210,8 @@ def add_topic_database(collection):
     """
 
     docID_ref_one = db.collection("num_topics").document('0').get()
-    docID = docID_ref_one.to_dict()['count']
-
-
+    docID = docID_ref_one.to_dict()["count"]
+    
     subject = list(collection.keys())[0]
     topic  = list(collection[subject].keys())[0]
     #print(topic)
@@ -277,6 +273,7 @@ def add_topic_database(collection):
     # increment count variable in database
     add_count(docID)
     #print(docID)
+    return docID
 
 def add_count(docID):
     """
