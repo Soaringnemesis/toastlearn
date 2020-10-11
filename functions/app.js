@@ -105,11 +105,6 @@ app.post("/createToast", function(req, res){
 
 	console.log(name, tag);
 
-	PythonShell.runString('pip install -r requirements.txt', null, function (err) {
-		if (err) throw err;
-		console.log('finished');
-	  });
-
 	PythonShell.run("./add_to_database.py", {
 		mode: "text",
 		scriptPath: "./",
